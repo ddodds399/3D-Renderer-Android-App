@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Shadows.ShadowActivity" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

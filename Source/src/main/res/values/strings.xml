@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">GD2 Render</string>
+    <string-array name="colours">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Black</item>
+        <item>Grey</item>
+    </string-array>
+    <string-array name ="cubes">
+    <item>Small</item>
+    <item>Medium</item>
+    <item>Large</item>
+    </string-array>
 </resources>

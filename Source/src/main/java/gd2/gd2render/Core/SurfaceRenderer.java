@@ -1,8 +1,11 @@
 package gd2.gd2render.Core;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
+import gd2.gd2render.OBJImporting.OBJParser;
+import gd2.gd2render.OBJImporting.TDModel;
 import gd2.gd2render.Utils.CameraMovement;
 import gd2.gd2render.Primitives.Line;
 import gd2.gd2render.Primitives.Cube;
@@ -21,6 +24,10 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
     private CameraMovement cM = new CameraMovement(2, 3, 0, 0, -1, 1);
     private CameraMovement cM1 = new CameraMovement(0, 0, -5, 0, 0, 0);
     private CameraMovement cM2 = new CameraMovement(-3, -4, 0, 2, 10, 0);
+    private OBJParser parser;
+    protected TDModel tModel;
+    public float rotX = 0f, rotZ = -0.5f, count = 90;
+    protected boolean rotating = false;
 
     /**
      * Surface Renderer Constructor
@@ -31,12 +38,24 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
         line = new Line();
     }
 
+    /**
+     * Surface Renderer Constructor
+     */
+    public SurfaceRenderer(Context context) {
+        tri = new Triangle();
+        cube = new Cube();
+        line = new Line();
+        parser = new OBJParser(context);
+        tModel=parser.parseOBJ("models/bear-obj.obj",0.5);
+    }
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         gl.glDisable(GL10.GL_DITHER);
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         gl.glClearDepthf(1f);
+
     }
 
     @Override
@@ -107,8 +126,11 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
         } else if (vPrimitive == 2) {
             GLU.gluLookAt(gl, cM2.getX(), cM2.getY(), cM2.getZ(), cM2.getEyeX(), cM2.getEyeY(), cM2.getEyeZ(), 0, 0, 1);
             cube.draw(gl);//draws the cube
-        }
+        } else if (vPrimitive == 3) {
+            GLU.gluLookAt(gl, cM1.getX(), cM1.getY(), cM1.getZ(), cM1.getEyeX(), cM1.getEyeY(), cM1.getEyeZ(), 0, 2, 0);
+            tModel.draw(gl);
 
+        }
     }
 
     // Increments the background colour based on touch input
@@ -180,6 +202,10 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
 
     public CameraMovement getCubeCamera() {
         return cM2;
+    }
+
+    public void setRotating(boolean isRotating) {
+        rotating = isRotating;
     }
 
 

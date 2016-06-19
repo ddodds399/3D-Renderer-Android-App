@@ -3,9 +3,6 @@ package gd2.gd2render.Lighting;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-/**
- * Created by Dean on 03/11/2015.
- */
 /*
     Learn Open GLES tutorial used and modified.
     http://www.learnopengles.com/android-lesson-two-ambient-and-diffuse-lighting/

@@ -6,11 +6,20 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import java.io.IOException;
+
+import gd2.gd2render.OFFImporting.ModelRenderer;
+import gd2.gd2render.Particles.ParticlesRenderer;
+import gd2.gd2render.UserInterface.UserInterfaceRenderer;
+
 public class SurfaceViewObject extends GLSurfaceView {
 
-    private final SurfaceRenderer mRenderer = new SurfaceRenderer();
-    public RendererGL2 rMK2; //remember to revert back to private once getters have been implemented and all other uses get updated
+    private SurfaceRenderer mRenderer;
+    public RendererGL2 rMK2;
+    public ParticlesRenderer pR1;//remember to revert back to private once getters have been implemented and all other uses get updated
     //max and min amount of scaling that can occur
+    public UserInterfaceRenderer uI1;
+    public ModelRenderer mR1;
     private static float MAX_SCALE = 5.0f;
     private static float MIN_SCALE = 1.0f;
     private boolean scaleCheck = true;
@@ -31,9 +40,39 @@ public class SurfaceViewObject extends GLSurfaceView {
         super(context);
         setEGLContextClientVersion(1);
         if (renderer == 0) {
+            mRenderer = new SurfaceRenderer();
             setRenderer(mRenderer);
             mRenderer.setvPrimitive(primitive);
-        } else {
+        }
+        else if(renderer == 2) {
+            pR1 = new ParticlesRenderer(context);
+            pR1.setParticleType(primitive);
+            setRenderer(pR1);
+
+        } else if (renderer == 3) {
+            try {
+                mR1 = new ModelRenderer(context.getAssets().open("models/dragon.off"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            setRenderer(mR1);
+        } else if (renderer  == 4){
+            setEGLContextClientVersion(2);
+            uI1 = new UserInterfaceRenderer(context);
+            setRenderer(uI1);
+
+
+        }else if (renderer  == 5){
+            mRenderer = new SurfaceRenderer(context);
+            setRenderer(mRenderer);
+            mRenderer.setvPrimitive(primitive);
+
+
+        }
+
+        else
+         {
             setEGLContextClientVersion(2);
             rMK2 = new RendererGL2(context);
             rMK2.setShaderMode(primitive);
@@ -107,31 +146,43 @@ public class SurfaceViewObject extends GLSurfaceView {
                     dy = dy * -1;
                 }
 
-                mRenderer.tri.rotate(mRenderer.tri.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 0.0f, 1.0f);
+                if (mRenderer !=null){
+                mRenderer.tri.rotate(mRenderer.tri.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 1.0f, 0.0f);
                 mRenderer.cube.rotate(mRenderer.cube.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 0.0f, 1.0f);
-                mRenderer.line.rotate(mRenderer.cube.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 0.0f, 1.0f);
+                mRenderer.line.rotate(mRenderer.cube.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 0.0f, 1.0f);}
+                if (mRenderer != null && mRenderer.tModel != null){
+                    mRenderer.tModel.rotate10(mRenderer.tModel.getrAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR), 0.0f, 1.0f, 0.0f);
+                }
+                if (mRenderer !=null){
                 mRenderer.cube.scale(scaleFactor, scaleFactor, scaleFactor);
-                mRenderer.tri.scale(scaleFactor, scaleFactor, scaleFactor);
+                mRenderer.tri.scale(scaleFactor, scaleFactor, scaleFactor);}
+
 
                 break;
 
             case MotionEvent.ACTION_DOWN:
 
+               if (mRenderer !=null){
                 mRenderer.changeColour();
+                mRenderer.setRotating(true);}
                 if (rMK2 != null) {
                     rMK2.setRotating(true);
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
+                if (mRenderer !=null){
                 mRenderer.tri.changeDrawElement();
                 mRenderer.tri.changeDrawElement();
-                mRenderer.cube.changeDrawElement();
+                mRenderer.cube.changeDrawElement();}
                 scaleX = 0;
                 if (rMK2 != null) {
                     rMK2.setRotating(false);
                     rMK2.cube.reColourFaces("#ff0000", "#ff8000", "#ffff00", "#80ff00", "#007fff", "#ff00ff");
+                    rMK2.incrDecals();
                 }
+                if (mRenderer !=null){
+                    mRenderer.setRotating(false);}
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:

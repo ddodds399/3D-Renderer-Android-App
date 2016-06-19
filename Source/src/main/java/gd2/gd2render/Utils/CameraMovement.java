@@ -1,8 +1,6 @@
 package gd2.gd2render.Utils;
 
-/**
- * Created by Andy on 04/11/2015.
- */
+
 public class CameraMovement {
     //initialise variables
     //camera position

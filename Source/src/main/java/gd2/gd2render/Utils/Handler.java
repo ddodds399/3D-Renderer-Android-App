@@ -58,6 +58,16 @@ public class Handler {
      */
     private int mTextureUniformHandle;
 
+    private int mLifetimeLocHandle;
+    private int mStartPositionLocHandle;
+    private int mEndPositionLocHandle;
+    private int mTimeLocHandle;
+    private int mCenterPositionLocHandle;
+    private int mColorLocHandle;
+    private int mSamplerLocHandle;
+
+    private int mEnvMapHandle;
+
     /**
      * Constructor sets up accompanying handles for the shader chosen.
      *
@@ -92,10 +102,42 @@ public class Handler {
             mTextureCoordinateHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_TexCoordinate");
             mPointMVPMatrixHandle = GLES20.glGetUniformLocation(mPointProgramHandle, "u_MVPMatrix");
             mPointPositionHandle = GLES20.glGetAttribLocation(mPointProgramHandle, "a_Position");
+        }else if (pvShader.equals("particle")){
+            mLifetimeLocHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_lifetime");
+            mStartPositionLocHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_startPosition" );
+            mEndPositionLocHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_endPosition" );
+
+            mTimeLocHandle = GLES20.glGetUniformLocation (mShaderProgramHandle, "u_time" );
+            mCenterPositionLocHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_centerPosition" );
+            mColorLocHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_color" );
+            mSamplerLocHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "s_texture" );
+        } else if (pvShader.equals("reflection")) {
+            mMVPMatrixHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_mvpMatrix");
+            mMVMatrixHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_mvMatrix");
+            mNormalHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Normal");
+            mPointPositionHandle = GLES20.glGetAttribLocation(mPointProgramHandle, "a_Position");
+            mEnvMapHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "s_environmentMap");
+
+        }
+        else if (pvShader.equals("skyBox"))
+        {
+            mMVPMatrixHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_MVPMatrix");
+            mMVMatrixHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_MVMatrix");
+            mTextureUniformHandle = GLES20.glGetUniformLocation(mShaderProgramHandle, "u_Texture");
+            mPositionHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Position");
+            mColourHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Color");
+            mNormalHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Normal");
+            mTextureCoordinateHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_TexCoordinate");
+
+
+        }
+        else if (pvShader.equals("shadow")) {
+            mPositionHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Position");
+            mNormalHandle = GLES20.glGetAttribLocation(mShaderProgramHandle, "a_Normal");
         }
     }
 
-    //Getter Methods for all handles need within the Renderer.
+    //Getter Methods for all handles needed within the Renderer.
 
     public int getmColourHandle() {
         return mColourHandle;
@@ -144,4 +186,33 @@ public class Handler {
     public int getmPointPositionHandle() {
         return mPointPositionHandle;
     }
+
+    public int getmLifetimeLocHandle(){
+        return mLifetimeLocHandle;
+    }
+
+    public int getmStartPositionLocHandle(){
+        return mStartPositionLocHandle;
+    }
+
+    public int getmEndPositionLocHandle(){
+        return mEndPositionLocHandle;
+    }
+
+    public  int getmTimeLocHandle(){
+        return mTimeLocHandle;
+    }
+
+    public int getmCenterPositionLocHandle(){
+        return mCenterPositionLocHandle;
+    }
+
+    public int getmColorLocHandle(){
+        return mColorLocHandle;
+    }
+
+    public int getmSamplerLocHandle(){
+        return mSamplerLocHandle;
+    }
+
 }

@@ -7,15 +7,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-/**
- * Created by Dean on 02/11/2015.
- */
 /*
     Learn Open GLES tutorial used and modified.
     http://www.learnopengles.com/android-lesson-two-ambient-and-diffuse-lighting/
  */
 public class CubeGL2 {
 
+    public static boolean sMesh = false;
     /**
      * Store the model matrix.
      */
@@ -23,7 +21,7 @@ public class CubeGL2 {
     /**
      * Store the cube vertex, colour, normal and texture coordinate data.
      */
-    private float[] cubeVertexData, cubeColourData, cubeNormalData, cubeTextureCoordinateData;
+    private float[] mCubeVertexData, mCubeColourData, mCubeNormalData, mCubeTextureCoordinateData;
     /**
      * Store model data in a float buffer.
      */
@@ -35,7 +33,7 @@ public class CubeGL2 {
     /**
      * Store normal data in a float buffer.
      */
-    private final FloatBuffer mCubeNormals;
+    private FloatBuffer mCubeNormals;
     /**
      * Store texture coordinate data in a float buffer.
      */
@@ -47,7 +45,7 @@ public class CubeGL2 {
     public CubeGL2() {
         // Define points for a cube.
         // X, Y, Z
-        cubeVertexData = new float[]
+        mCubeVertexData = new float[]
                 {
                         // Front face
                         -1.0f, 1.0f, 1.0f,
@@ -93,7 +91,7 @@ public class CubeGL2 {
                         -1.0f, -1.0f, -1.0f,
                 };
         // R, G, B, A
-        cubeColourData = new float[]
+        mCubeColourData = new float[]
                 {
                         // Front face
                         1.0f, 0.0f, 0.0f, 1.0f,
@@ -139,7 +137,7 @@ public class CubeGL2 {
                         1.0f, 0.0f, 1.0f, 1.0f
                 };
         // X, Y, Z
-        cubeNormalData = new float[]
+        mCubeNormalData = new float[]
                 {
                         // Front face
                         0.0f, 0.0f, 1.0f,
@@ -186,7 +184,7 @@ public class CubeGL2 {
                 };
         // X, Y
         // Texture coordinate data.
-        cubeTextureCoordinateData = new float[]
+        mCubeTextureCoordinateData = new float[]
                 {
                         // Front face
                         0.0f, 0.0f,
@@ -232,18 +230,235 @@ public class CubeGL2 {
                         1.0f, 0.0f
                 };
         // Initialize the buffers.
-        mCubeVertices = ByteBuffer.allocateDirect(cubeVertexData.length * 4)
+        mCubeVertices = ByteBuffer.allocateDirect(mCubeVertexData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mCubeVertices.put(cubeVertexData).position(0);
-        mCubeColours = ByteBuffer.allocateDirect(cubeColourData.length * 4)
+        mCubeVertices.put(mCubeVertexData).position(0);
+        mCubeColours = ByteBuffer.allocateDirect(mCubeColourData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mCubeColours.put(cubeColourData).position(0);
-        mCubeNormals = ByteBuffer.allocateDirect(cubeNormalData.length * 4)
+        mCubeColours.put(mCubeColourData).position(0);
+        mCubeNormals = ByteBuffer.allocateDirect(mCubeNormalData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mCubeNormals.put(cubeNormalData).position(0);
-        mCubeTextureCoordinates = ByteBuffer.allocateDirect(cubeTextureCoordinateData.length * 4)
+        mCubeNormals.put(mCubeNormalData).position(0);
+        mCubeTextureCoordinates = ByteBuffer.allocateDirect(mCubeTextureCoordinateData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mCubeTextureCoordinates.put(cubeTextureCoordinateData).position(0);
+        mCubeTextureCoordinates.put(mCubeTextureCoordinateData).position(0);
+        Matrix.setIdentityM(mModelMatrix, 0);
+    }
+
+    /**
+     * Constructor for cube, size based on user input.
+     **/
+    public CubeGL2(double width, double height, double depth) {
+        // Define points for a cube.
+        // X, Y, Z
+        mCubeVertexData = new float[]
+                {
+                        // Front face
+                        -1.0f, 1.0f, 1.0f,
+                        -1.0f, -1.0f, 1.0f,
+                        1.0f, 1.0f, 1.0f,
+                        -1.0f, -1.0f, 1.0f,
+                        1.0f, -1.0f, 1.0f,
+                        1.0f, 1.0f, 1.0f,
+                        // Right face
+                        1.0f, 1.0f, 1.0f,
+                        1.0f, -1.0f, 1.0f,
+                        1.0f, 1.0f, -1.0f,
+                        1.0f, -1.0f, 1.0f,
+                        1.0f, -1.0f, -1.0f,
+                        1.0f, 1.0f, -1.0f,
+                        // Back face
+                        1.0f, 1.0f, -1.0f,
+                        1.0f, -1.0f, -1.0f,
+                        -1.0f, 1.0f, -1.0f,
+                        1.0f, -1.0f, -1.0f,
+                        -1.0f, -1.0f, -1.0f,
+                        -1.0f, 1.0f, -1.0f,
+                        // Left face
+                        -1.0f, 1.0f, -1.0f,
+                        -1.0f, -1.0f, -1.0f,
+                        -1.0f, 1.0f, 1.0f,
+                        -1.0f, -1.0f, -1.0f,
+                        -1.0f, -1.0f, 1.0f,
+                        -1.0f, 1.0f, 1.0f,
+                        // Top face
+                        -1.0f, 1.0f, -1.0f,
+                        -1.0f, 1.0f, 1.0f,
+                        1.0f, 1.0f, -1.0f,
+                        -1.0f, 1.0f, 1.0f,
+                        1.0f, 1.0f, 1.0f,
+                        1.0f, 1.0f, -1.0f,
+                        // Bottom face
+                        1.0f, -1.0f, -1.0f,
+                        1.0f, -1.0f, 1.0f,
+                        -1.0f, -1.0f, -1.0f,
+                        1.0f, -1.0f, 1.0f,
+                        -1.0f, -1.0f, 1.0f,
+                        -1.0f, -1.0f, -1.0f,
+                };
+
+        for (int i = 0; i < mCubeVertexData.length; i += 3) {
+            mCubeVertexData[i] = mCubeVertexData[i] * (float) width;
+        }
+        for (int i = 1; i < mCubeVertexData.length; i += 3) {
+            mCubeVertexData[i] = mCubeVertexData[i] * (float) height;
+        }
+        for (int i = 2; i < mCubeVertexData.length; i += 3) {
+            mCubeVertexData[i] = mCubeVertexData[i] * (float) depth;
+        }
+
+        // R, G, B, A
+        mCubeColourData = new float[]
+                {
+                        // Front face
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        1.0f, 0.0f, 0.0f, 1.0f,
+                        // Right face
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        0.0f, 1.0f, 0.0f, 1.0f,
+                        // Back face
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f, 1.0f,
+                        // Left face
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f, 0.0f, 1.0f,
+                        // Top face
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        0.0f, 1.0f, 1.0f, 1.0f,
+                        // Bottom face
+                        1.0f, 0.0f, 1.0f, 1.0f,
+                        1.0f, 0.0f, 1.0f, 1.0f,
+                        1.0f, 0.0f, 1.0f, 1.0f,
+                        1.0f, 0.0f, 1.0f, 1.0f,
+                        1.0f, 0.0f, 1.0f, 1.0f,
+                        1.0f, 0.0f, 1.0f, 1.0f
+                };
+        // X, Y, Z
+        mCubeNormalData = new float[]
+                {
+                        // Front face
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        // Right face
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        // Back face
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        // Left face
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        // Top face
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        // Bottom face
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f
+                };
+        // X, Y
+        // Texture coordinate data.
+        mCubeTextureCoordinateData = new float[]
+                {
+                        // Front face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f,
+                        // Right face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f,
+                        // Back face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f,
+                        // Left face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f,
+                        // Top face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f,
+                        // Bottom face
+                        0.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 0.0f,
+                        0.0f, 1.0f,
+                        1.0f, 1.0f,
+                        1.0f, 0.0f
+                };
+        // Initialize the buffers.
+        mCubeVertices = ByteBuffer.allocateDirect(mCubeVertexData.length * 4)
+                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubeVertices.put(mCubeVertexData).position(0);
+        mCubeColours = ByteBuffer.allocateDirect(mCubeColourData.length * 4)
+                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubeColours.put(mCubeColourData).position(0);
+        mCubeNormals = ByteBuffer.allocateDirect(mCubeNormalData.length * 4)
+                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubeNormals.put(mCubeNormalData).position(0);
+        mCubeTextureCoordinates = ByteBuffer.allocateDirect(mCubeTextureCoordinateData.length * 4)
+                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mCubeTextureCoordinates.put(mCubeTextureCoordinateData).position(0);
         Matrix.setIdentityM(mModelMatrix, 0);
     }
 
@@ -297,19 +512,19 @@ public class CubeGL2 {
     }
 
     public float[] getCubeVertexData() {
-        return cubeVertexData;
+        return mCubeVertexData;
     }
 
     public float[] getCubeColourData() {
-        return cubeColourData;
+        return mCubeColourData;
     }
 
     public float[] getCubeNormalData() {
-        return cubeNormalData;
+        return mCubeNormalData;
     }
 
     public float[] getCubeTextureCoordinateData() {
-        return cubeTextureCoordinateData;
+        return mCubeTextureCoordinateData;
     }
 
     /**
@@ -354,6 +569,7 @@ public class CubeGL2 {
         GLES20.glUniform3f(lightHandle, lightEye[0], lightEye[1], lightEye[2]);
         // Draw the cube.
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
+
     }
 
     /**
@@ -434,17 +650,21 @@ public class CubeGL2 {
         // Pass in the combined matrix.
         GLES20.glUniformMatrix4fv(mvpHandle, 1, false, mvpMat, 0);
         // Draw the cube.
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
+        if(!sMesh){
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
+        }else{
+                GLES20.glDrawArrays(GLES20.GL_LINES, 0, 36);
+        }
     }
 
     /**
      * Recolours the 6 faces of the cube, given colour data for each face as a hex colour. (eg. "#FFFFFF")
      *
-     * @param front - Front face colour in hex
-     * @param right - Right face colour in hex
-     * @param back - Back face colour in hex
-     * @param left - Left face colour in hex
-     * @param top - Top face colour in hex
+     * @param front  - Front face colour in hex
+     * @param right  - Right face colour in hex
+     * @param back   - Back face colour in hex
+     * @param left   - Left face colour in hex
+     * @param top    - Top face colour in hex
      * @param bottom - Bottom face colour in hex
      */
     public void reColourFaces(String front, String right, String back, String left, String top, String bottom) {
@@ -481,7 +701,7 @@ public class CubeGL2 {
         bm = Integer.valueOf(bottom.substring(5, 7), 16) / 255.00f;
 
         // Apply all the colour data to the cubeColourData array
-        cubeColourData = new float[]{
+        mCubeColourData = new float[]{
 
                 // Front face
                 rf, gf, bf, a,
@@ -527,7 +747,106 @@ public class CubeGL2 {
                 rm, gm, bm, a
         };
         // Add the colour data to the colour buffer
-        mCubeColours.put(cubeColourData).position(0);
+        mCubeColours.put(mCubeColourData).position(0);
     }
+
+    /**
+     * Method for inverting the normals of a cube object, for use in
+     * making a skybox
+     */
+    public void invertNormals() {
+        mCubeNormalData = new float[]
+                {
+                        // Front face
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        0.0f, 0.0f, -1.0f,
+                        // Right face
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        -1.0f, 0.0f, 0.0f,
+                        // Back face
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        0.0f, 0.0f, 1.0f,
+                        // Left face
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        1.0f, 0.0f, 0.0f,
+                        // Top face
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        0.0f, -1.0f, 0.0f,
+                        // Bottom face
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f
+                };
+        mCubeNormals.put(mCubeNormalData).position(0);
+
+    }
+
+    public void shadowDraw(int positionAttribute, int normalAttribute, int colorAttribute, boolean onlyPosition) {
+
+        // Pass in the position information
+        mCubeVertices.position(0);
+        GLES20.glVertexAttribPointer(positionAttribute, 3, GLES20.GL_FLOAT, false,
+                0, mCubeVertices);
+
+        GLES20.glEnableVertexAttribArray(positionAttribute);
+
+
+        if (!onlyPosition) {
+            // Pass in the normal information
+            mCubeNormals.position(0);
+            GLES20.glVertexAttribPointer(normalAttribute, 3, GLES20.GL_FLOAT, false,
+                    0, mCubeNormals);
+
+            GLES20.glEnableVertexAttribArray(normalAttribute);
+
+            // Pass in the color information
+            mCubeColours.position(0);
+            GLES20.glVertexAttribPointer(colorAttribute, 4, GLES20.GL_FLOAT, false,
+                    0, mCubeColours);
+
+            GLES20.glEnableVertexAttribArray(colorAttribute);
+        }
+
+
+       
+        // Draw the cube.
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
+    }
+
+
+        /**
+         * method to set the ui view to the mesh view if the user required it
+         */
+        public static void setMesh(){
+                if(sMesh){
+                        sMesh = false;
+                }else{
+                        sMesh = true;
+                }
+        }
+
 
 }

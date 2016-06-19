@@ -4,9 +4,6 @@ import android.app.Application;
 import android.content.res.AssetManager;
 import gd2.gd2render.Utils.AssetsManager;
 
-/**
- * Created by Dean on 24/11/2015.
- */
 public class GD2Renderer extends Application{
 
    AssetsManager assetsManager;

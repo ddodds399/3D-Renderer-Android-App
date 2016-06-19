@@ -7,9 +7,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-/**
- * Created by Dean on 01/11/2015.
- */
 /*
     Learn Open GLES tutorial used and modified.
     http://www.learnopengles.com/android-lesson-one-getting-started/
@@ -28,27 +25,54 @@ public class TriangleGL2 {
     /**
      * Store the triangle vertex data.
      */
-    private float[] triangleVerticesData;
+    private float[] mTriangleVerticesData;
 
     /**
      * Constructor for triangle, setting up vertices and identity matrix.
      */
     public TriangleGL2() {
-        triangleVerticesData = new float[]{
+        mTriangleVerticesData = new float[]{
                 // X, Y, Z,
                 // R, G, B, A
-                -0.5f, -0.25f, 0.0f,
+                -1.0f, -0.5f, 0.0f,
                 1.0f, 0.0f, 0.0f, 1.0f,
 
-                0.5f, -0.25f, 0.0f,
+                1.0f, -0.5f, 0.0f,
                 0.0f, 0.0f, 1.0f, 1.0f,
 
-                0.0f, 0.559016994f, 0.0f,
+                0.0f, 0.559016994f*2, 0.0f,
                 0.0f, 1.0f, 0.0f, 1.0f};
 
-        mTriangleVertices = ByteBuffer.allocateDirect(triangleVerticesData.length * 4)
+        mTriangleVertices = ByteBuffer.allocateDirect(mTriangleVerticesData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mTriangleVertices.put(triangleVerticesData).position(0);
+        mTriangleVertices.put(mTriangleVerticesData).position(0);
+
+        Matrix.setIdentityM(mModelMatrix, 0);
+    }
+
+    public TriangleGL2(double base, double height) {
+        mTriangleVerticesData = new float[]{
+                // X, Y, Z,
+                // R, G, B, A
+                -1.0f, -0.5f, 0.0f,
+                1.0f, 0.0f, 0.0f, 1.0f,
+
+                1.0f, -0.5f, 0.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+
+                0.0f, 0.559016994f*2, 0.0f,
+                0.0f, 1.0f, 0.0f, 1.0f};
+
+        for(int i=0; i<mTriangleVerticesData.length; i+=7){
+            mTriangleVerticesData[i] = mTriangleVerticesData[i]*(float)base;
+        }
+        for(int i=1; i<mTriangleVerticesData.length; i+=7){
+            mTriangleVerticesData[i] = mTriangleVerticesData[i]*(float)height;
+        }
+
+        mTriangleVertices = ByteBuffer.allocateDirect(mTriangleVerticesData.length * 4)
+                .order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mTriangleVertices.put(mTriangleVerticesData).position(0);
 
         Matrix.setIdentityM(mModelMatrix, 0);
     }
@@ -92,7 +116,7 @@ public class TriangleGL2 {
     }
 
     public float[] getTriangleVertexData() {
-        return triangleVerticesData;
+        return mTriangleVerticesData;
     }
 
     /**

@@ -10,9 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-/**
- * Created by Dean on 24/11/2015.
- */
 public class AssetsManager {
 
     Map <String, byte[]> assets;

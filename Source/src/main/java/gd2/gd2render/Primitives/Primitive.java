@@ -6,9 +6,6 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-/**
- * Created by James on 30/10/2015.
- */
 public abstract class Primitive {
 
     private FloatBuffer vBuff;

@@ -13,27 +13,27 @@ public class TextureBuilderTest extends InstrumentationTestCase
      * testTexture2 - mip map texture creation - TRUE
      * testTexture3 - mip map texture creation - FALSE
      */
-    private int testTexture1;
-    private int testTexture2;
-    private int testTexture3;
-    private TextureBuilder tb;
+//    private int testTexture1;
+//    private int testTexture2;
+//    private int testTexture3;
+//    private TextureBuilder tb;
 
-    public void testinit()
-    {
-        tb = new TextureBuilder(AppContext.getContext());
-        testTexture1 = tb.createTexture(R.drawable.tiles);
-        testTexture2 = tb.createTexture(R.drawable.tiles, 1);
-        testTexture3 = tb.createTexture(R.drawable.tiles, 0);
-    }
-
-    public void testTextures(){
-
-        final int[]texArray = new int[]{
-                testTexture1,testTexture2,testTexture3
-        };
-        for(int element:texArray){
-            assertNotSame(element, 0);
-            Log.d("TextureTest", Integer.toString(element));
-        }
-    }
+//    public void testinit()
+//    {
+//        tb = new TextureBuilder(AppContext.getContext());
+//        testTexture1 = tb.createTexture(R.drawable.tiles);
+//        testTexture2 = tb.createTexture(R.drawable.tiles, 1);
+//        testTexture3 = tb.createTexture(R.drawable.tiles, 0);
+//    }
+//
+//    public void testTextures(){
+//
+//        final int[]texArray = new int[]{
+//                testTexture1,testTexture2,testTexture3
+//        };
+//        for(int element:texArray){
+//            assertNotSame(element, 0);
+//            Log.d("TextureTest", Integer.toString(element));
+//        }
+//    }
 }
